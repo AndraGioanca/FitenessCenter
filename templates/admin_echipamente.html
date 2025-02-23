@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Equipment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{{ url_for('static', filename='img5.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); 
+            z-index: 1;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        nav a {
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        main {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .form-inline {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Equipment</h1>
+    </header>
+    <nav>
+        <a href="/admin">Dashboard</a>
+        <a href="/admin_subscriptions">View Subscriptions</a>
+        <a href="/admin_classes">View Classes</a>
+        <a href="/admin_feedback">View Feedback</a>
+        <a href="/admin_view_users">View Users</a>
+        <a href="/admin_echipamente">Equipment</a>
+        <a href="/logout">Logout</a>
+    </nav>
+    <main>
+        <h1>Equipment</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for eq in echipamente %}
+                <tr>
+                    <td>{{ eq[0] }}</td>
+                    <td>{{ eq[1] }}</td>
+                    <td>{{ eq[2] }}</td>
+                    <td>{{ eq[3] }}</td>
+                    <td>
+                        <!-- Form for updating status -->
+                        <form class="form-inline" action="/admin_echipamente" method="POST">
+                            <input type="hidden" name="id" value="{{ eq[0] }}">
+                            <input type="hidden" name="action" value="update">
+                            <select name="status">
+                                <option value="functional" {% if eq[3] == "functional" %}selected{% endif %}>functional</option>
+                                <option value="under maintenance" {% if eq[3] == "under maintenance" %}selected{% endif %}>under maintenance</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+
+                        <!-- Form for deleting equipment -->
+                        <form action="/admin_echipamente" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="{{ eq[0] }}">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this equipment?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Form for adding new equipment -->
+        <h2>Add New Equipment</h2>
+        <form action="/admin_echipamente" method="POST">
+            <input type="hidden" name="action" value="add">
+            <input type="text" name="name" placeholder="Equipment Name" required>
+            <select name="type" required>
+                <option value="Cardio">Cardio</option>
+                <option value="Strength">Strength</option>
+            </select>
+            <select name="status" required>
+                <option value="functional">Functional</option>
+                <option value="under maintenance">Under Maintenance</option>
+            </select>
+            <button type="submit">Add Equipment</button>
+        </form>
+    </main>    
+</body>
+</html>
