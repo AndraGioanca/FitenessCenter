@@ -107,59 +107,13 @@ The database consists of the following tables and relationships:
 - **Foreign Keys:** Maintain relational integrity.
 - **Validation Rules:** Enforce valid data entry.
 
-## 6. Sample Queries
-
-### Basic Queries
-1. **View Subscription Prices:**
-   ```sql
-   SELECT Type, MIN(Price) AS Price
-   FROM Subscription
-   GROUP BY Type
-   ORDER BY Type;
-   ```
-
-2. **View Equipment:**
-   ```sql
-   SELECT EquipmentID, Name, Type, Status
-   FROM Equipment;
-   ```
-
-3. **View Classes and Trainers:**
-   ```sql
-   SELECT c.ClassID, c.Name, c.Time, CONCAT(t.FirstName, ' ', t.LastName) AS Trainer
-   FROM Classes c
-   JOIN Trainers t ON c.TrainerID = t.TrainerID;
-   ```
-
-### Advanced Queries
-1. **Class Enrollment Analysis:**
-   Retrieve classes with more than 5 clients and taught by trainers handling over 3 classes.
-   ```sql
-   SELECT c.ClassID, c.Name
-   FROM Classes c
-   JOIN Trainers t ON c.TrainerID = t.TrainerID
-   HAVING (
-       SELECT COUNT(*) FROM ClassDetails cd WHERE cd.ClassID = c.ClassID) > 5
-       AND (
-       SELECT COUNT(*) FROM Classes c2 WHERE c2.TrainerID = c.TrainerID) > 3;
-   ```
-
-2. **Feedback Analysis:**
-   Retrieve recent user feedback details.
-   ```sql
-   SELECT f.FeedbackID, CONCAT(u.Name, ' (', u.Email, ')') AS ClientInfo
-   FROM Feedback f
-   JOIN Users u ON f.UserID = u.UserID
-   WHERE f.FeedbackDate >= (SELECT MIN(FeedbackDate) FROM Feedback);
-   ```
-
-## 7. Technologies Used
+## 6. Technologies Used
 - **Backend:** Python (Flask)
 - **Database:** SQL Server
 - **Frontend:** HTML, CSS, JavaScript
 - **Version Control:** Git & GitHub
 
-## 8. Conclusion
+## 7. Conclusion
 This Fitness Center Management System efficiently handles user subscriptions, class scheduling, equipment usage, and feedback collection. It is designed for easy navigation and management for both clients and administrators.
 
 
